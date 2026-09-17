@@ -6,14 +6,11 @@ Convite digital (13/02/2027 · Caucaia — CE). Abra o `index.html` no navegador
 
 Para o convite ficar completo, adicione os arquivos abaixo com **exatamente estes nomes**:
 
-| Arquivo         | O que é                                   | Obrigatório |
+| Arquivo         | O que é                                   | Status      |
 |-----------------|-------------------------------------------|-------------|
-| `casal.jpg`     | Foto do casal (aparece na capa e no topo) | Sim         |
-| `monograma.png` | Monograma do casal (topo e rodapé)        | Sim         |
+| `casal.jpg`     | Foto do casal (aparece na capa e no topo) | ✅ incluído |
+| `monograma.jpg` | Monograma do casal (topo e rodapé)        | ✅ incluído |
 | `musica.mp3`    | Música do convite                         | Opcional    |
-
-> Se a foto do casal estiver em `.png`, ou o monograma em `.jpg`, renomeie os arquivos
-> OU ajuste o nome dentro do `index.html` (procure por `casal.jpg` / `monograma.png`).
 
 ## O que já está configurado
 
