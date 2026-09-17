@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>João Ykaro & Ana Kel Ingre — 13.02.2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #4c522f;   /* verde oliva escuro — textos/títulos      */
+  --ink-deep:   #3a3f22;   /* oliva mais escuro — nomes/botões         */
+  --olive:      #61683a;   /* oliva médio                              */
+  --slate:      #8b8c63;   /* oliva suave/sage — labels/acentos        */
+  --line:       rgba(76,82,47,0.28);
+  --line-soft:  rgba(76,82,47,0.14);
+  --cream:      #faf8f0;   /* fundo do corpo (branco quente)           */
+  --paper:      #efe9d8;   /* fundo do splash (papel bege)             */
+  --beige:      #e4dcc4;   /* bege                                     */
+  --white:      #ffffff;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  font-family: 'EB Garamond', Georgia, serif;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════
+   SPLASH — CAPA ÚNICA
+══════════════════════════════════ */
+#splash {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 28px 26px; overflow-y: auto; overflow-x: hidden;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 17px, rgba(76,82,47,0.022) 17px 18px),
+    radial-gradient(ellipse 85% 60% at 50% 42%, transparent 45%, rgba(58,63,34,0.10) 100%),
+    var(--paper);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+#splash.opening { opacity: 0; transform: scale(1.045); pointer-events: none; }
+
+.splash-card {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; max-width: 520px; width: 100%;
+  opacity: 0; transform: translateY(16px);
+  animation: splashIn 1.3s ease forwards 0.15s;
+}
+@keyframes splashIn { to { opacity: 1; transform: translateY(0); } }
+
+/* foto do casal em moldura arco */
+.crest-photo {
+  position: relative; width: auto; height: clamp(168px, 32vh, 290px);
+  aspect-ratio: 4 / 5; margin-bottom: clamp(14px, 2.6vh, 24px);
+  border-radius: 50% 50% 12px 12px / 36% 36% 4px 4px;
+  overflow: hidden; border: 1.5px solid var(--olive);
+  box-shadow: 0 14px 40px rgba(58,63,34,0.24);
+}
+.crest-photo::after {
+  content: ''; position: absolute; inset: 5px; pointer-events: none;
+  border: 1px solid rgba(255,255,255,0.55);
+  border-radius: 50% 50% 9px 9px / 36% 36% 3px 3px;
+}
+.crest-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 26%; display: block; }
+
+.splash-eyebrow {
+  font-family: 'Cinzel', serif; font-size: clamp(9px, 2.4vw, 11px);
+  letter-spacing: 5px; text-transform: uppercase; color: var(--slate);
+  margin-bottom: clamp(14px, 2.4vh, 22px);
+}
+
+.splash-names {
+  font-family: 'Cinzel', serif; font-weight: 500;
+  color: var(--ink-deep); line-height: 1.06;
+  display: flex; flex-direction: column; align-items: center;
+}
+.splash-names .n {
+  font-size: clamp(30px, min(9vw, 6.4vh), 52px); letter-spacing: clamp(4px, 1.5vw, 10px);
+  padding-left: clamp(4px, 1.5vw, 10px); /* compensa o tracking à direita */
+}
+.splash-names .amp {
+  font-family: 'Pinyon Script', cursive; font-weight: 400;
+  font-size: clamp(32px, min(8.5vw, 6vh), 50px); color: var(--slate);
+  letter-spacing: 0; line-height: 0.7; margin: 1px 0;
+}
+
+.splash-date {
+  font-family: 'Cinzel', serif; font-size: clamp(10px, 2.7vw, 13px);
+  letter-spacing: 5px; text-transform: uppercase; color: var(--olive);
+  margin: clamp(16px, 2.6vh, 26px) 0 clamp(20px, 3vh, 30px); position: relative; padding-top: clamp(14px, 2vh, 20px);
+}
+.splash-date::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 46px; height: 1px; background: var(--line);
+}
+
+.splash-tap {
+  font-family: 'Cinzel', serif; font-size: clamp(10px, 2.6vw, 12px);
+  letter-spacing: 4px; text-transform: uppercase; color: var(--ink);
+  background: transparent; border: 1.5px solid var(--line);
+  border-radius: 999px; padding: 15px 38px; cursor: pointer;
+  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  animation: tapPulse 2.6s ease-in-out infinite;
+}
+.splash-tap:hover { background: var(--ink-deep); color: #fff; border-color: var(--ink-deep); animation: none; }
+@keyframes tapPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(76,82,47,0.0); } 50% { box-shadow: 0 0 0 6px rgba(76,82,47,0.05); } }
+
+/* ══════════════════════════════════
+   MAIN / HERO
+══════════════════════════════════ */
+#main { display: none; min-height: 100vh; }
+
+.hero {
+  min-height: 100vh; background: var(--white);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48px 22px 70px; position: relative;
+}
+.hero-inner { width: 100%; max-width: 640px; display: flex; flex-direction: column; align-items: center; }
+
+.hero-monogram { width: clamp(78px, 20vw, 110px); height: auto; margin: 0 auto 22px; display: block; }
+
+.hero-eyebrow {
+  font-family: 'Cinzel', serif; font-size: clamp(9px, 2.4vw, 11px);
+  letter-spacing: 5px; text-transform: uppercase; color: var(--slate);
+  margin-bottom: 26px; text-align: center;
+}
+.hero-photo { width: 100%; margin: 0 auto 30px; }
+.hero-photo img { width: 100%; height: auto; display: block; border: 1.5px solid var(--line); }
+
+.hero-verse-label {
+  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--slate);
+  margin-bottom: 12px;
+}
+.hero-verse {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: clamp(17px, 4.6vw, 21px); color: var(--olive); line-height: 1.55;
+  max-width: 480px; margin: 0 auto 30px; text-align: center; font-weight: 400;
+}
+
+.hero-names {
+  font-family: 'Cinzel', serif; font-weight: 600; color: var(--ink-deep);
+  font-size: clamp(24px, 7vw, 42px); letter-spacing: clamp(4px, 1.4vw, 9px);
+  padding-left: clamp(4px, 1.4vw, 9px); line-height: 1.15; text-align: center;
+}
+
+/* bloco de data */
+.date-block {
+  display: grid; grid-template-columns: 1fr auto auto auto 1fr;
+  align-items: center; gap: 0; margin: 30px auto 6px; width: 100%; max-width: 440px;
+}
+.date-line { height: 1px; background: var(--line); }
+.date-side {
+  font-family: 'Cinzel', serif; font-size: clamp(11px, 3vw, 13px);
+  letter-spacing: 3px; text-transform: uppercase; color: var(--olive);
+  padding: 0 16px; position: relative;
+}
+.date-side::before, .date-side::after {
+  content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+  width: 34px; height: 1px; background: var(--line);
+}
+.date-side::before { top: -12px; } .date-side::after { bottom: -12px; }
+.date-center { padding: 0 18px; text-align: center; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+.date-month { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 3px; color: var(--slate); display: block; }
+.date-day   { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(34px, 9vw, 44px); color: var(--ink-deep); line-height: 1; display: block; }
+.date-year  { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 3px; color: var(--slate); display: block; }
+
+.hero-invite {
+  font-family: 'Cinzel', serif; font-size: clamp(10px, 2.5vw, 12px);
+  letter-spacing: 3px; text-transform: uppercase; color: var(--slate);
+  text-align: center; line-height: 1.7; margin-top: 30px;
+}
+.hero-scroll { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 34px; animation: bounceDown 2s ease-in-out infinite; }
+.hero-scroll span { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--slate); }
+.scroll-arrow { width: 1px; height: 34px; background: linear-gradient(to bottom, var(--olive), transparent); }
+@keyframes bounceDown { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+/* ══════════════════════════════════
+   MÚSICA (barra oliva)
+══════════════════════════════════ */
+.music-section {
+  background: var(--ink-deep); padding: 28px 24px;
+  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+.music-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.72); }
+.music-player { display: flex; align-items: center; gap: 12px; }
+.music-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: #fff; }
+.play-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.16); border: 1.5px solid rgba(255,255,255,0.45);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+}
+.play-btn:hover { background: rgba(255,255,255,0.3); }
+.play-btn svg { margin-left: 2px; }
+
+/* ══════════════════════════════════
+   SECTIONS
+══════════════════════════════════ */
+section { padding: 78px 24px; max-width: 600px; margin: 0 auto; text-align: center; }
+.section-label {
+  font-family: 'Cinzel', serif; font-size: 11px; font-weight: 500;
+  letter-spacing: 5px; text-transform: uppercase; color: var(--slate);
+  margin-bottom: 32px; display: block;
+}
+
+/* MESSAGE BOX */
+.message-box {
+  border-top: 1.5px solid var(--line); border-bottom: 1.5px solid var(--line);
+  padding: 42px 24px; margin-top: 14px; position: relative;
+  opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.message-box.visible { opacity: 1; transform: translateY(0); }
+.message-box::before, .message-box::after {
+  content: "❧"; position: absolute; font-size: 18px; color: var(--slate); left: 50%; transform: translateX(-50%); background: var(--cream); padding: 0 8px;
+}
+.message-box::before { top: -12px; } .message-box::after { bottom: -12px; }
+.message-text {
+  font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 4.6vw, 21px);
+  font-style: italic; color: var(--olive); line-height: 1.8; font-weight: 400;
+}
+
+/* TIMELINE */
+.timeline { display: flex; flex-direction: column; margin-top: 14px; }
+.timeline-item {
+  display: grid; grid-template-columns: 1fr 44px 1fr; align-items: start; gap: 16px; padding: 20px 0;
+  position: relative; opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.timeline-item.visible { opacity: 1; transform: translateY(0); }
+.timeline-item:not(:last-child)::after {
+  content: ''; position: absolute; left: 50%; top: 54px; width: 1px; height: calc(100% - 24px);
+  background: linear-gradient(to bottom, var(--line), transparent); transform: translateX(-50%);
+}
+.timeline-dot {
+  width: 44px; height: 44px; background: #fff; border: 1.5px solid var(--line); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(76,82,47,0.10);
+}
+.timeline-left { text-align: right; padding-top: 8px; }
+.timeline-right { text-align: left; padding-top: 8px; }
+.timeline-time { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; color: var(--slate); display: block; margin-bottom: 4px; font-weight: 500; }
+.timeline-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--ink); display: block; font-weight: 500; }
+.timeline-sub { font-size: 13px; color: var(--slate); display: block; margin-top: 3px; line-height: 1.5; }
+
+/* INFO CARDS */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+.info-card {
+  border: 1.5px solid var(--line); padding: 24px 16px; background: #fff; position: relative;
+  opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.info-card.visible { opacity: 1; transform: translateY(0); }
+.info-card::before { content: ''; position: absolute; inset: 4px; border: 1px solid var(--line-soft); pointer-events: none; }
+.info-card-icon { display: block; margin: 0 auto 10px; }
+.info-card-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--slate); display: block; margin-bottom: 6px; font-weight: 500; }
+.info-card-value { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--ink); font-style: italic; font-weight: 500; line-height: 1.4; }
+
+/* LOCAL / MAPA */
+.local-box {
+  border: 1.5px solid var(--line); padding: 34px 24px; background: #fff; margin-top: 14px; position: relative;
+  opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.local-box.visible { opacity: 1; transform: translateY(0); }
+.local-box::before { content: ''; position: absolute; inset: 4px; border: 1px solid var(--line-soft); pointer-events: none; }
+.local-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.local-addr { font-family: 'EB Garamond', serif; font-size: 16px; color: var(--olive); line-height: 1.6; }
+.map-btn {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 13px 30px;
+  border: 1.5px solid var(--olive); background: transparent; font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink);
+  text-decoration: none; transition: all 0.3s ease;
+}
+.map-btn:hover { background: var(--ink-deep); color: #fff; border-color: var(--ink-deep); }
+
+/* PALETA DE CORES */
+.palette-section { background: #fff; border: 1.5px solid var(--line); padding: 40px 24px; margin-top: 14px; }
+.palette-grid { display: flex; justify-content: center; gap: 26px; margin-top: 24px; flex-wrap: wrap; }
+.palette-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.palette-swatch { width: 58px; height: 58px; border-radius: 50%; border: 1.5px solid var(--line); box-shadow: 0 4px 14px rgba(76,82,47,0.14); }
+.palette-name { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--slate); font-weight: 500; }
+.palette-note { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--olive); margin-top: 24px; line-height: 1.6; }
+
+/* COUNTDOWN */
+.countdown-wrap { margin-top: 8px; opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.countdown-wrap.visible { opacity: 1; transform: translateY(0); }
+.countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.countdown-box { background: #fff; border: 1.5px solid var(--line); padding: 20px 8px 14px; }
+.countdown-num { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 500; color: var(--ink); line-height: 1; display: block; }
+.countdown-label { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px; color: var(--slate); text-transform: uppercase; display: block; margin-top: 6px; font-weight: 500; }
+
+/* GIFT / PIX */
+.gift-box {
+  border: 1.5px solid var(--line); padding: 40px 24px; background: #fff; position: relative; margin-top: 14px;
+  opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.gift-box.visible { opacity: 1; transform: translateY(0); }
+.gift-box::before { content: ''; position: absolute; inset: 4px; border: 1px solid var(--line-soft); pointer-events: none; }
+.gift-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(16px, 4.4vw, 18px); font-style: italic; color: var(--olive); line-height: 1.75; margin: 16px 0; text-align: left; }
+.gift-signature { font-family: 'Pinyon Script', cursive; font-size: 26px; color: var(--ink-deep); display: block; margin-top: 6px; text-align: center; }
+.pix-box { background: var(--paper); border: 1.5px dashed var(--olive); padding: 22px 18px; margin-top: 24px; }
+.pix-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--slate); display: block; margin-bottom: 8px; font-weight: 500; }
+.pix-key { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--ink-deep); word-break: break-all; }
+.gift-btn {
+  display: inline-block; margin-top: 18px; padding: 13px 34px; border: 1.5px solid var(--olive); background: transparent;
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink);
+  text-decoration: none; transition: all 0.3s ease; cursor: pointer;
+}
+.gift-btn:hover { background: var(--ink-deep); color: #fff; border-color: var(--ink-deep); }
+.gift-btn.copied { background: var(--olive); color: #fff; border-color: var(--olive); }
+
+/* AVISOS */
+.avisos-list { display: flex; flex-direction: column; border: 1.5px solid var(--line); background: #fff; }
+.aviso-item { display: flex; align-items: flex-start; gap: 18px; padding: 24px 26px; border-bottom: 1px solid var(--line-soft); transition: background 0.2s; }
+.aviso-item:last-child { border-bottom: none; }
+.aviso-item:hover { background: rgba(76,82,47,0.025); }
+.aviso-icon { width: 48px; height: 48px; flex-shrink: 0; border: 1.5px solid var(--line); border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--cream); }
+.aviso-text { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.aviso-title { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--slate); font-weight: 500; }
+.aviso-desc { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; color: var(--olive); line-height: 1.6; }
+.aviso-desc strong { font-style: normal; font-weight: 600; color: var(--ink); }
+
+/* RSVP */
+.rsvp-section { padding-bottom: 96px; }
+.rsvp-card { background: #fff; border: 1.5px solid var(--line); padding: 40px 30px; position: relative; text-align: center; }
+.rsvp-card::before { content: ''; position: absolute; inset: 5px; border: 1px solid var(--line-soft); pointer-events: none; }
+.rsvp-intro { font-family: 'Cormorant Garamond', serif; font-size: clamp(17px, 4.5vw, 19px); font-style: italic; color: var(--olive); line-height: 1.7; margin-bottom: 26px; }
+.rsvp-hint { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px; color: var(--slate); text-transform: uppercase; line-height: 1.6; }
+
+.btn-whatsapp {
+  display: inline-flex; align-items: center; gap: 10px; background: #25D366; color: #fff; border: none;
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 15px 30px; cursor: pointer; text-decoration: none; transition: all 0.3s; font-weight: 500;
+}
+.btn-whatsapp:hover { background: #1da851; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.3); }
+
+/* FOOTER */
+footer { text-align: center; padding: 44px 24px; border-top: 1.5px solid var(--line); }
+.footer-monogram { width: 66px; height: auto; display: block; margin: 0 auto 18px; opacity: 0.9; }
+.footer-names { font-family: 'Cinzel', serif; font-size: 18px; letter-spacing: 4px; color: var(--ink); display: block; margin-bottom: 10px; }
+.footer-date { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px; color: var(--slate); text-transform: uppercase; }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* MUSIC WIDGET */
+.music-widget {
+  position: fixed; bottom: 22px; right: 22px; z-index: 999; display: flex; align-items: center; gap: 10px;
+  background: rgba(250,248,240,0.95); border: 1.5px solid var(--olive); padding: 10px 15px;
+  backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(76,82,47,0.18);
+}
+.music-toggle {
+  width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--olive); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); font-size: 14px; transition: all 0.2s;
+}
+.music-toggle:hover { background: var(--ink-deep); color: #fff; }
+.music-widget-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; color: var(--slate); text-transform: uppercase; }
+.music-bars { display: flex; gap: 2px; align-items: flex-end; height: 16px; }
+.music-bar { width: 3px; background: var(--olive); border-radius: 1px; animation: musicBar 0.8s ease-in-out infinite; }
+.music-bar:nth-child(1){height:6px;animation-delay:0s;} .music-bar:nth-child(2){height:12px;animation-delay:.15s;}
+.music-bar:nth-child(3){height:8px;animation-delay:.3s;} .music-bar:nth-child(4){height:14px;animation-delay:.1s;}
+.music-bar:nth-child(5){height:6px;animation-delay:.25s;}
+@keyframes musicBar { 0%,100%{transform:scaleY(0.4);} 50%{transform:scaleY(1.2);} }
+.music-bars.paused .music-bar { animation-play-state: paused; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--ink-deep); color: #fff; font-family: 'Cinzel', serif; font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase; padding: 14px 26px; border-radius: 4px;
+  opacity: 0; pointer-events: none; transition: all 0.35s ease; z-index: 1000;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll, .splash-tap, .music-bar { animation: none; }
+}
+@media (max-width: 500px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .countdown-grid { gap: 8px; }
+  .countdown-num { font-size: 30px; }
+  .aviso-item { padding: 18px 16px; gap: 14px; }
+  .date-side { padding: 0 10px; letter-spacing: 2px; }
+  .date-center { padding: 0 12px; }
+  .palette-grid { gap: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ SPLASH (capa única) ══════════ -->
+<div id="splash" onclick="openInvite()">
+  <div class="splash-card">
+    <div class="crest-photo">
+      <img src="casal.jpg" alt="João Ykaro e Ana Kel Ingre">
+    </div>
+    <div class="splash-eyebrow">Vamos nos casar</div>
+    <div class="splash-names">
+      <span class="n">João Ykaro</span>
+      <span class="amp">&amp;</span>
+      <span class="n">Ana Kel Ingre</span>
+    </div>
+    <div class="splash-date">13 · Fevereiro · 2027</div>
+    <button class="splash-tap" type="button">Toque para abrir</button>
+  </div>
+</div>
+
+<!-- ══════════ MUSIC WIDGET ══════════ -->
+<div class="music-widget" id="musicWidget" style="display:none;">
+  <div class="music-bars" id="musicBars">
+    <div class="music-bar"></div><div class="music-bar"></div><div class="music-bar"></div><div class="music-bar"></div><div class="music-bar"></div>
+  </div>
+  <span class="music-widget-label">Nossa Música</span>
+  <button class="music-toggle" id="musicToggle" onclick="toggleMusic()" title="Pausar/Tocar">&#9646;&#9646;</button>
+</div>
+
+<!-- ══════════ MAIN ══════════ -->
+<div id="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <img class="hero-monogram" src="monograma.png" alt="Monograma João Ykaro e Ana Kel Ingre">
+      <div class="hero-eyebrow">Com a bênção de Deus</div>
+      <div class="hero-photo">
+        <img src="casal.jpg" alt="João Ykaro e Ana Kel Ingre">
+      </div>
+      <div class="hero-verse-label">1 Coríntios 13:2</div>
+      <p class="hero-verse">"E ainda que tivesse o dom de profecia, e conhecesse todos os mistérios e toda a ciência, e ainda que tivesse toda a fé, de maneira tal que transportasse os montes, e não tivesse amor, nada seria."</p>
+      <div class="hero-names">João Ykaro &amp; Ana Kel Ingre</div>
+      <div class="date-block">
+        <div class="date-line"></div>
+        <div class="date-side">Sábado</div>
+        <div class="date-center">
+          <span class="date-month">Fev</span>
+          <span class="date-day">13</span>
+          <span class="date-year">2027</span>
+        </div>
+        <div class="date-side">16:00</div>
+        <div class="date-line"></div>
+      </div>
+      <p class="hero-invite">Convidam você<br>para o seu casamento</p>
+      <div class="hero-scroll"><span>Rolar</span><div class="scroll-arrow"></div></div>
+    </div>
+  </div>
+
+  <!-- MÚSICA -->
+  <div class="music-section">
+    <span class="music-label">Nossa Música</span>
+    <div class="music-player">
+      <button class="play-btn" onclick="openMusic()">
+        <svg width="14" height="16" viewBox="0 0 14 16" fill="#fff"><path d="M0 0 L14 8 L0 16 Z"/></svg>
+      </button>
+      <span class="music-title" id="musicTitleLabel">Clique para ouvir</span>
+    </div>
+  </div>
+
+  <!-- NOSSA HISTÓRIA -->
+  <section>
+    <span class="section-label reveal">Nossa história</span>
+    <div class="message-box reveal">
+      <p class="message-text">
+        "Entre orações e sonhos, Deus cuidou de cada detalhe para que a nossa história chegasse até aqui.<br><br>
+        Agora queremos dividir com você o início de uma nova jornada — feita de amor, fé e companheirismo."
+      </p>
+    </div>
+  </section>
+
+  <!-- O GRANDE DIA -->
+  <section style="padding-top:0;">
+    <span class="section-label reveal">O grande dia</span>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <span class="timeline-time">16:00</span>
+          <span class="timeline-title">Cerimônia</span>
+          <span class="timeline-sub">Iparana<br>Caucaia — CE</span>
+        </div>
+        <div class="timeline-dot">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v4M10 4h4"/><path d="M5 10l7-4 7 4v10H5z"/><rect x="9" y="14" width="6" height="6"/>
+          </svg>
+        </div>
+        <div class="timeline-right"></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-left"></div>
+        <div class="timeline-dot">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+        </div>
+        <div class="timeline-right">
+          <span class="timeline-time">Logo após</span>
+          <span class="timeline-title">Recepção</span>
+          <span class="timeline-sub">No mesmo local</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFORMAÇÕES -->
+  <section style="padding-top:0;">
+    <span class="section-label reveal">Informações</span>
+    <div class="info-grid">
+      <div class="info-card">
+        <svg class="info-card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span class="info-card-label">Data</span>
+        <span class="info-card-value">13 de fevereiro<br>de 2027</span>
+      </div>
+      <div class="info-card">
+        <svg class="info-card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <span class="info-card-label">Local</span>
+        <span class="info-card-value">Iparana<br>Caucaia — CE</span>
+      </div>
+      <div class="info-card">
+        <svg class="info-card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span class="info-card-label">Horário</span>
+        <span class="info-card-value">Cerimônia às<br>16h em ponto</span>
+      </div>
+      <div class="info-card">
+        <svg class="info-card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="info-card-label">Cerimônia & Recepção</span>
+        <span class="info-card-value">No mesmo<br>local</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCAL / COMO CHEGAR -->
+  <section style="padding-top:0;">
+    <span class="section-label reveal">Como chegar</span>
+    <div class="local-box reveal">
+      <div class="local-name">Cerimônia & Recepção</div>
+      <p class="local-addr">R. Luiz Paiva, 75 — Iparana<br>Caucaia — CE, 61627-090</p>
+      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=R.+Luiz+Paiva%2C+75+-+Iparana%2C+Caucaia+-+CE%2C+61627-090" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Ver no mapa
+      </a>
+    </div>
+  </section>
+
+  <!-- PALETA DE CORES -->
+  <section style="padding-top:0;">
+    <span class="section-label reveal">Paleta de cores</span>
+    <div class="palette-section reveal">
+      <div class="palette-grid">
+        <div class="palette-item">
+          <span class="palette-swatch" style="background:#ffffff;"></span>
+          <span class="palette-name">Branco</span>
+        </div>
+        <div class="palette-item">
+          <span class="palette-swatch" style="background:#61683a;"></span>
+          <span class="palette-name">Verde Oliva</span>
+        </div>
+        <div class="palette-item">
+          <span class="palette-swatch" style="background:#e4dcc4;"></span>
+          <span class="palette-name">Bege</span>
+        </div>
+      </div>
+      <p class="palette-note">Estas são as cores que darão vida à nossa festa.<br>Se quiser, inspire-se nelas para compor o seu look.</p>
+    </div>
+  </section>
+
+  <!-- CONTAGEM REGRESSIVA -->
+  <section style="padding-top:0;">
+    <span class="section-label reveal">Contagem regressiva</span>
+    <div class="countdown-wrap">
+      <div class="countdown-grid">
+        <div class="countdown-box"><span class="countdown-num" id="days">--</span><span class="countdown-label">Dias</span></div>
+        <div class="countdown-box"><span class="countdown-num" id="hours">--</span><span class="countdown-label">Horas</span></div>
+        <div class="countdown-box"><span class="countdown-num" id="minutes">--</span><span class="countdown-label">Min</span></div>
+        <div class="countdown-box"><span class="countdown-num" id="seconds">--</span><span class="countdown-label">Seg</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LISTA DE PRESENTES / PIX -->
+  <section style="padding-top:0;">
+    <span class="section-label reveal">Lista de Presentes</span>
+    <div class="gift-box reveal">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto"><path d="M20 12v10H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      <p class="gift-text">
+        Queridos familiares e amigos,<br><br>
+        O maior presente que poderíamos receber é a presença, o carinho e o amor de vocês celebrando esse dia tão especial ao nosso lado.<br><br>
+        Como já montamos nosso cantinho e, graças a Deus, temos tudo o que precisamos para começar essa nova fase, decidimos disponibilizar uma opção de Pix para aqueles que, de forma totalmente espontânea, desejarem nos presentear.<br><br>
+        Sintam-se à vontade: não há valor definido e, principalmente, não existe qualquer obrigação. Qualquer contribuição, independentemente do valor, será recebida com muito carinho e gratidão. O mais importante para nós é compartilhar esse momento com cada um de vocês.
+        <span class="gift-signature">Com amor, os noivos ❤</span>
+      </p>
+      <div class="pix-box">
+        <span class="pix-label">Chave Pix</span>
+        <span class="pix-key" id="pixKey">kelingre@gmail.com</span>
+      </div>
+      <button type="button" class="gift-btn" id="pixCopyBtn" onclick="copyPix()">Copiar chave Pix</button>
+    </div>
+  </section>
+
+  <!-- MANUAL DOS CONVIDADOS / AVISOS IMPORTANTES -->
+  <section style="padding-top:0;">
+    <span class="section-label reveal">Manual dos Convidados</span>
+    <div class="avisos-list reveal">
+      <div class="aviso-item">
+        <div class="aviso-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 Q12 6 16 2 L18 8 L15 8 L15 22 L9 22 L9 8 L6 8 Z"/><path d="M9 8 Q12 11 15 8"/></svg></div>
+        <div class="aviso-text">
+          <span class="aviso-title">Traje</span>
+          <span class="aviso-desc">Capriche no look! Nossa paleta é <strong>branco, verde oliva e bege</strong> — evite usar branco por completo, para reservá-lo aos noivos.</span>
+        </div>
+      </div>
+      <div class="aviso-item">
+        <div class="aviso-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="aviso-text">
+          <span class="aviso-title">Seja Pontual</span>
+          <span class="aviso-desc">Planeje-se para chegar com calma. A cerimônia começa às <strong>16h em ponto</strong>.</span>
+        </div>
+      </div>
+      <div class="aviso-item">
+        <div class="aviso-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="aviso-text">
+          <span class="aviso-title">Convite Intransferível</span>
+          <span class="aviso-desc">Este convite é pessoal e intransferível. Convidado não convida.</span>
+        </div>
+      </div>
+      <div class="aviso-item">
+        <div class="aviso-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#61683a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 8 Q12 6 14 8"/><path d="M9 11 Q12 8 15 11"/><line x1="5" y1="5" x2="19" y2="19"/></svg></div>
+        <div class="aviso-text">
+          <span class="aviso-title">Celular no Silencioso</span>
+          <span class="aviso-desc">Durante a cerimônia, mantenha o celular no <strong>modo silencioso</strong>.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIRMAÇÃO -->
+  <section class="rsvp-section">
+    <span class="section-label reveal">Confirmação de Presença</span>
+    <div class="rsvp-card reveal">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--ink-deep);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <p class="rsvp-intro">Sua presença é fundamental para nós.<br>Confirme sua presença pelo WhatsApp.</p>
+      <a id="rsvpBtn" href="#" target="_blank" rel="noopener" class="btn-whatsapp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.13c-.24.68-1.42 1.31-1.95 1.36-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.37-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.81 2.01.88 2.16.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.29.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.69-.81.88-1.09.19-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.32.07.12.07.68-.17 1.36z"/></svg>
+        Confirmar no WhatsApp
+      </a>
+      <p class="rsvp-hint" style="margin-top:18px;">Você será direcionado ao WhatsApp dos noivos<br>(85) 98645-3323</p>
+    </div>
+  </section>
+
+  <footer>
+    <img class="footer-monogram" src="monograma.png" alt="Monograma João Ykaro e Ana Kel Ingre">
+    <span class="footer-names">João Ykaro &amp; Ana Kel Ingre</span>
+    <span class="footer-date">13 · Fevereiro · 2027 · Caucaia, CE</span>
+  </footer>
+</div>
+
+<!-- Toast de confirmação de cópia -->
+<div class="toast" id="toast">Chave Pix copiada!</div>
+
+<!-- Áudio nativo — funciona em todos os dispositivos, incl. iPhone.
+     Suba o MP3 no GitHub na MESMA pasta deste arquivo, com o nome exato indicado em CONFIG.MUSIC_FILE. -->
+<audio id="bgMusic" loop preload="auto" playsinline>
+  <source id="bgMusicSrc" src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  CONFIG — edite só aqui o que ainda falta (música / pix / etc) ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+var CONFIG = {
+  MUSIC_FILE:   'musica.mp3',          // nome EXATO do MP3 (mesma pasta do convite no GitHub)
+  MUSIC_TITLE:  'Nossa Música',        // troque pelo nome da música quando escolherem
+  PIX_KEY:      'kelingre@gmail.com',  // chave Pix (e-mail)
+  WHATSAPP:     '5585986453323',       // WhatsApp dos noivos (55 + DDD + número)
+  WHATSAPP_MSG: 'Olá! Gostaria de confirmar minha presença no casamento de João Ykaro e Ana Kel Ingre. 💍',
+  TARGET_DATE:  '2027-02-13T16:00:00'  // data e horário da cerimônia
+};
+
+/* ── helpers ── */
+function applyConfig(){
+  var src = document.getElementById('bgMusicSrc');
+  if (src) src.src = CONFIG.MUSIC_FILE;
+  var t = document.getElementById('musicTitleLabel');
+  if (t) t.textContent = CONFIG.MUSIC_TITLE + ' — Clique para ouvir';
+  var pix = document.getElementById('pixKey');
+  if (pix) pix.textContent = CONFIG.PIX_KEY;
+  var rsvp = document.getElementById('rsvpBtn');
+  if (rsvp) rsvp.href = 'https://wa.me/' + CONFIG.WHATSAPP + '?text=' + encodeURIComponent(CONFIG.WHATSAPP_MSG);
+}
+
+/* ── COPIAR PIX ── */
+function copyPix(){
+  var key = CONFIG.PIX_KEY;
+  var btn = document.getElementById('pixCopyBtn');
+  function done(){
+    if (btn){ btn.textContent = 'Chave copiada ✓'; btn.classList.add('copied'); setTimeout(function(){ btn.textContent = 'Copiar chave Pix'; btn.classList.remove('copied'); }, 2500); }
+    showToast('Chave Pix copiada!');
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(key).then(done).catch(function(){ fallbackCopy(key, done); });
+  } else { fallbackCopy(key, done); }
+}
+function fallbackCopy(text, cb){
+  var ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta); if (cb) cb();
+}
+function showToast(msg){
+  var t = document.getElementById('toast'); if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+/* ── ÁUDIO NATIVO ── */
+var bgMusic = null, musicPlaying = false;
+function getMusic(){ if (!bgMusic){ bgMusic = document.getElementById('bgMusic'); if (bgMusic) bgMusic.volume = 0.55; } return bgMusic; }
+function showMusicWidget(){ var w = document.getElementById('musicWidget'); if (w) w.style.display = 'flex'; }
+function setMusicUI(on){
+  var tg = document.getElementById('musicToggle'); var br = document.getElementById('musicBars');
+  if (tg) tg.innerHTML = on ? '&#9646;&#9646;' : '&#9654;';
+  if (br){ if (on) br.classList.remove('paused'); else br.classList.add('paused'); }
+}
+function playMusic(){
+  var a = getMusic(); if (!a) return; showMusicWidget();
+  var p = a.play();
+  if (p && p.then){ p.then(function(){ musicPlaying = true; setMusicUI(true); }).catch(function(){ musicPlaying = false; setMusicUI(false); }); }
+  else { musicPlaying = true; setMusicUI(true); }
+}
+function pauseMusic(){ var a = getMusic(); if (!a) return; a.pause(); musicPlaying = false; setMusicUI(false); }
+function toggleMusic(){ if (musicPlaying) pauseMusic(); else playMusic(); }
+function openMusic(){ showMusicWidget(); if (!musicPlaying) playMusic(); else pauseMusic(); }
+
+/* ── SPLASH → MAIN ── */
+var inviteOpened = false;
+function openInvite(){
+  if (inviteOpened) return;
+  inviteOpened = true;
+  var splash = document.getElementById('splash');
+  playMusic(); // chamada SÍNCRONA dentro do toque (essencial no iPhone)
+  splash.classList.add('opening');
+  setTimeout(function(){
+    splash.style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    document.getElementById('musicWidget').style.display = 'flex';
+    initScrollAnimations();
+    startCountdown();
+    window.scrollTo(0, 0);
+  }, 900);
+}
+
+/* ── COUNTDOWN ── */
+function startCountdown(){
+  var target = new Date(CONFIG.TARGET_DATE);
+  function update(){
+    var diff = target - new Date();
+    if (diff <= 0){
+      document.getElementById('days').textContent='00';document.getElementById('hours').textContent='00';
+      document.getElementById('minutes').textContent='00';document.getElementById('seconds').textContent='00';return;
+    }
+    document.getElementById('days').textContent    = String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('hours').textContent   = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  update(); setInterval(update, 1000);
+}
+
+/* ── SCROLL ANIMATIONS ── */
+function initScrollAnimations(){
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, .timeline-item, .info-card, .countdown-wrap, .message-box, .gift-box, .local-box').forEach(function(el){ observer.observe(el); });
+}
+
+applyConfig();
+</script>
+</body>
+</html>
