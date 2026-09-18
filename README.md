@@ -10,10 +10,10 @@ Para o convite ficar completo, adicione os arquivos abaixo com **exatamente este
 |-----------------|-------------------------------------------|-------------|
 | `casal.jpg`     | Foto do casal (aparece na capa e no topo) | ✅ incluído |
 | `monograma.jpg` | Monograma do casal (topo e rodapé)        | ✅ incluído |
+| `musica.mp3`    | Música do convite (toca ao abrir a capa)  | ✅ incluído |
 
-> A música toca direto do **YouTube** (player invisível) — não precisa de arquivo MP3.
-> Para trocar a música, edite `YT_VIDEO_ID` no bloco `CONFIG` dentro do `index.html`
-> (é o código que vem depois de `youtu.be/`).
+> A música toca a partir do arquivo `musica.mp3`. Para trocá-la, basta substituir
+> esse arquivo (mantendo o nome) ou editar `MUSIC_FILE` no bloco `CONFIG` do `index.html`.
 
 ## O que já está configurado
 
