@@ -673,8 +673,20 @@ function showToast(msg){
 }
 
 /* ── ÁUDIO NATIVO ── */
-var bgMusic = null, musicPlaying = false;
-function getMusic(){ if (!bgMusic){ bgMusic = document.getElementById('bgMusic'); if (bgMusic) bgMusic.volume = 0.55; } return bgMusic; }
+var bgMusic = null, musicPlaying = false, userPaused = false;
+function getMusic(){
+  if (!bgMusic){
+    bgMusic = document.getElementById('bgMusic');
+    if (bgMusic){
+      bgMusic.volume = 0.55;
+      // o ícone do widget segue o estado REAL do áudio
+      bgMusic.addEventListener('play',  function(){ musicPlaying = true;  setMusicUI(true);  });
+      bgMusic.addEventListener('playing', function(){ musicPlaying = true; setMusicUI(true); });
+      bgMusic.addEventListener('pause', function(){ musicPlaying = false; setMusicUI(false); });
+    }
+  }
+  return bgMusic;
+}
 function showMusicWidget(){ var w = document.getElementById('musicWidget'); if (w) w.style.display = 'flex'; }
 function setMusicUI(on){
   var tg = document.getElementById('musicToggle'); var br = document.getElementById('musicBars');
@@ -684,12 +696,31 @@ function setMusicUI(on){
 function playMusic(){
   var a = getMusic(); if (!a) return; showMusicWidget();
   var p = a.play();
-  if (p && p.then){ p.then(function(){ musicPlaying = true; setMusicUI(true); }).catch(function(){ musicPlaying = false; setMusicUI(false); }); }
+  if (p && p.then){ p.then(function(){ musicPlaying = true; setMusicUI(true); }).catch(function(){ musicPlaying = false; setMusicUI(false); armInteractionFallback(); }); }
   else { musicPlaying = true; setMusicUI(true); }
 }
-function pauseMusic(){ var a = getMusic(); if (!a) return; a.pause(); musicPlaying = false; setMusicUI(false); }
-function toggleMusic(){ if (musicPlaying) pauseMusic(); else playMusic(); }
-function openMusic(){ showMusicWidget(); if (!musicPlaying) playMusic(); else pauseMusic(); }
+function pauseMusic(){ var a = getMusic(); if (!a) return; userPaused = true; a.pause(); musicPlaying = false; setMusicUI(false); }
+function toggleMusic(){ if (musicPlaying) pauseMusic(); else { userPaused = false; playMusic(); } }
+function openMusic(){ showMusicWidget(); if (!musicPlaying) { userPaused = false; playMusic(); } else pauseMusic(); }
+
+/* Se o navegador bloquear o play no toque da capa, tenta de novo
+   no primeiro clique/toque/rolagem seguinte (a menos que o usuário tenha pausado). */
+var fallbackArmed = false;
+function armInteractionFallback(){
+  if (fallbackArmed) return; fallbackArmed = true;
+  function retry(){
+    if (!userPaused && !musicPlaying){ playMusic(); }
+    if (musicPlaying || userPaused){
+      document.removeEventListener('click', retry);
+      document.removeEventListener('touchend', retry);
+      document.removeEventListener('scroll', retry);
+      fallbackArmed = false;
+    }
+  }
+  document.addEventListener('click', retry, { passive: true });
+  document.addEventListener('touchend', retry, { passive: true });
+  document.addEventListener('scroll', retry, { passive: true });
+}
 
 /* ── SPLASH → MAIN ── */
 var inviteOpened = false;
