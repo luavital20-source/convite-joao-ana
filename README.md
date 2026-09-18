@@ -10,7 +10,7 @@ Para o convite ficar completo, adicione os arquivos abaixo com **exatamente este
 |-----------------|-------------------------------------------|-------------|
 | `casal.jpg`     | Foto do casal (aparece na capa e no topo) | ✅ incluído |
 | `monograma.jpg` | Monograma do casal (topo e rodapé)        | ✅ incluído |
-| `musica.mp3`    | Música do convite                         | Opcional    |
+| `musica.mp3`    | Música do convite (*Jesus Meu Esposo*)    | ✅ incluído |
 
 ## O que já está configurado
 
