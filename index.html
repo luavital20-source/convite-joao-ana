@@ -639,7 +639,11 @@ var CONFIG = {
 /* ── helpers ── */
 function applyConfig(){
   var src = document.getElementById('bgMusicSrc');
-  if (src) src.src = CONFIG.MUSIC_FILE;
+  var audio = document.getElementById('bgMusic');
+  if (src && src.getAttribute('src') !== CONFIG.MUSIC_FILE){
+    src.src = CONFIG.MUSIC_FILE;
+    if (audio && audio.load) audio.load(); // recarrega quando o nome do arquivo muda
+  }
   var t = document.getElementById('musicTitleLabel');
   if (t) t.textContent = CONFIG.MUSIC_TITLE + ' — Clique para ouvir';
   var pix = document.getElementById('pixKey');
@@ -684,8 +688,28 @@ function setMusicUI(on){
 function playMusic(){
   var a = getMusic(); if (!a) return; showMusicWidget();
   var p = a.play();
-  if (p && p.then){ p.then(function(){ musicPlaying = true; setMusicUI(true); }).catch(function(){ musicPlaying = false; setMusicUI(false); }); }
+  if (p && p.then){
+    p.then(function(){ musicPlaying = true; setMusicUI(true); })
+     .catch(function(){ musicPlaying = false; setMusicUI(false); armAutoplayFallback(); });
+  }
   else { musicPlaying = true; setMusicUI(true); }
+}
+/* Se o navegador bloquear a 1ª tentativa (política de autoplay),
+   volta a tentar tocar na próxima interação do usuário. */
+var fallbackArmed = false;
+function armAutoplayFallback(){
+  if (fallbackArmed) return; fallbackArmed = true;
+  function retry(){
+    var a = getMusic(); if (!a) return;
+    var p = a.play();
+    if (p && p.then){ p.then(function(){ musicPlaying = true; setMusicUI(true); cleanup(); }).catch(function(){}); }
+    else { musicPlaying = true; setMusicUI(true); cleanup(); }
+  }
+  function cleanup(){
+    fallbackArmed = false;
+    ['click','touchstart','keydown','scroll'].forEach(function(ev){ document.removeEventListener(ev, retry); });
+  }
+  ['click','touchstart','keydown','scroll'].forEach(function(ev){ document.addEventListener(ev, retry, { passive: true }); });
 }
 function pauseMusic(){ var a = getMusic(); if (!a) return; a.pause(); musicPlaying = false; setMusicUI(false); }
 function toggleMusic(){ if (musicPlaying) pauseMusic(); else playMusic(); }
