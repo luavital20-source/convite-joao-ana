@@ -372,6 +372,9 @@ footer { text-align: center; padding: 44px 24px; border-top: 1.5px solid var(--l
 @keyframes musicBar { 0%,100%{transform:scaleY(0.4);} 50%{transform:scaleY(1.2);} }
 .music-bars.paused .music-bar { animation-play-state: paused; }
 
+/* host invisível do player do YouTube (só áudio) */
+#ytHost { position: fixed; bottom: 0; left: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; z-index: -1; }
+
 /* TOAST */
 .toast {
   position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%) translateY(20px);
@@ -617,19 +620,17 @@ footer { text-align: center; padding: 44px 24px; border-top: 1.5px solid var(--l
 <!-- Toast de confirmação de cópia -->
 <div class="toast" id="toast">Chave Pix copiada!</div>
 
-<!-- Áudio nativo — funciona em todos os dispositivos, incl. iPhone.
-     Suba o MP3 no GitHub na MESMA pasta deste arquivo, com o nome exato indicado em CONFIG.MUSIC_FILE. -->
-<audio id="bgMusic" loop preload="auto" playsinline>
-  <source id="bgMusicSrc" src="musica.mp3" type="audio/mpeg">
-</audio>
+<!-- Player do YouTube (invisível) — toca a música da capa automaticamente ao abrir o convite.
+     Troque o ID do vídeo em CONFIG.YT_VIDEO_ID. -->
+<div id="ytHost" aria-hidden="true"><div id="ytPlayer"></div></div>
 
 <script>
 /* ╔══════════════════════════════════════════════════════════════╗
    ║  CONFIG — edite só aqui o que ainda falta (música / pix / etc) ║
    ╚══════════════════════════════════════════════════════════════╝ */
 var CONFIG = {
-  MUSIC_FILE:   'musica.mp3',          // nome EXATO do MP3 (mesma pasta do convite no GitHub)
-  MUSIC_TITLE:  'Nossa Música',        // troque pelo nome da música quando escolherem
+  YT_VIDEO_ID:  'cG1uioTqMxI',         // ID do vídeo do YouTube (o que vem depois de youtu.be/)
+  MUSIC_TITLE:  'Nossa Música',        // rótulo exibido no player
   PIX_KEY:      'kelingre@gmail.com',  // chave Pix (e-mail)
   WHATSAPP:     '5585986453323',       // WhatsApp dos noivos (55 + DDD + número)
   WHATSAPP_MSG: 'Olá! Gostaria de confirmar minha presença no casamento de João Ykaro e Ana Kel Ingre. 💍',
@@ -638,8 +639,6 @@ var CONFIG = {
 
 /* ── helpers ── */
 function applyConfig(){
-  var src = document.getElementById('bgMusicSrc');
-  if (src) src.src = CONFIG.MUSIC_FILE;
   var t = document.getElementById('musicTitleLabel');
   if (t) t.textContent = CONFIG.MUSIC_TITLE + ' — Clique para ouvir';
   var pix = document.getElementById('pixKey');
@@ -672,9 +671,32 @@ function showToast(msg){
   setTimeout(function(){ t.classList.remove('show'); }, 2200);
 }
 
-/* ── ÁUDIO NATIVO ── */
-var bgMusic = null, musicPlaying = false;
-function getMusic(){ if (!bgMusic){ bgMusic = document.getElementById('bgMusic'); if (bgMusic) bgMusic.volume = 0.55; } return bgMusic; }
+/* ── MÚSICA (YouTube IFrame API) ── */
+var ytPlayer = null, ytReady = false, musicPlaying = false, wantPlay = false;
+
+// carrega a API do YouTube
+(function(){ var tag = document.createElement('script'); tag.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(tag); })();
+
+// callback global chamado pela API do YouTube quando estiver pronta
+function onYouTubeIframeAPIReady(){
+  ytPlayer = new YT.Player('ytPlayer', {
+    height: '1', width: '1',
+    videoId: CONFIG.YT_VIDEO_ID,
+    playerVars: {
+      autoplay: 0, controls: 0, disablekb: 1, fs: 0, rel: 0,
+      modestbranding: 1, playsinline: 1,
+      loop: 1, playlist: CONFIG.YT_VIDEO_ID   // playlist = mesmo ID faz repetir em loop
+    },
+    events: { onReady: onYtReady, onStateChange: onYtState }
+  });
+}
+function onYtReady(){ ytReady = true; if (wantPlay) playMusic(); }
+function onYtState(e){
+  if (e.data === YT.PlayerState.PLAYING){ musicPlaying = true; setMusicUI(true); }
+  else if (e.data === YT.PlayerState.PAUSED){ musicPlaying = false; setMusicUI(false); }
+  else if (e.data === YT.PlayerState.ENDED){ try { ytPlayer.playVideo(); } catch(err){} } // reforço do loop
+}
+
 function showMusicWidget(){ var w = document.getElementById('musicWidget'); if (w) w.style.display = 'flex'; }
 function setMusicUI(on){
   var tg = document.getElementById('musicToggle'); var br = document.getElementById('musicBars');
@@ -682,12 +704,12 @@ function setMusicUI(on){
   if (br){ if (on) br.classList.remove('paused'); else br.classList.add('paused'); }
 }
 function playMusic(){
-  var a = getMusic(); if (!a) return; showMusicWidget();
-  var p = a.play();
-  if (p && p.then){ p.then(function(){ musicPlaying = true; setMusicUI(true); }).catch(function(){ musicPlaying = false; setMusicUI(false); }); }
-  else { musicPlaying = true; setMusicUI(true); }
+  showMusicWidget();
+  if (!ytReady || !ytPlayer){ wantPlay = true; return; }
+  wantPlay = false;
+  try { ytPlayer.unMute(); ytPlayer.setVolume(60); ytPlayer.playVideo(); } catch(err){}
 }
-function pauseMusic(){ var a = getMusic(); if (!a) return; a.pause(); musicPlaying = false; setMusicUI(false); }
+function pauseMusic(){ try { if (ytPlayer) ytPlayer.pauseVideo(); } catch(err){} musicPlaying = false; setMusicUI(false); }
 function toggleMusic(){ if (musicPlaying) pauseMusic(); else playMusic(); }
 function openMusic(){ showMusicWidget(); if (!musicPlaying) playMusic(); else pauseMusic(); }
 
